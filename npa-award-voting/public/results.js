@@ -1,25 +1,38 @@
-// Mao ni nag update sa mga yellow bar real-time bay gikan sa database nato
 import { db, ref, onValue } from './firebase.js';
 
-const resultsContainer = document.getElementById('resultsContainer');
+const officialResults = document.getElementById('officialResults');
+const communityResults = document.getElementById('communityResults');
+const communitySection = document.getElementById('communitySection');
 
 const pollsRef = ref(db, 'votingPollSystem/polls');
+
+// Kini ang basehan sa system kung unsa ang "Official" nga awards nato
+const officialTitles = [
+    "2026 Most Valuable Player", 
+    "2026 Rookie of the Year", 
+    "2026 Defensive Player of the Year", 
+    "2026 Sixth Man of the Year", 
+    "2026 Coach of the Year"
+];
 
 onValue(pollsRef, (snapshot) => {
     if (snapshot.exists()) {
         const allPolls = snapshot.val();
         renderResults(allPolls);
     } else {
-        if (resultsContainer) {
-            resultsContainer.innerHTML = "<p style='text-align:center;'>No votes have been cast yet.</p>";
+        if (officialResults) {
+            officialResults.innerHTML = "<p style='text-align:center;'>No votes have been cast yet.</p>";
         }
     }
 });
 
-// Function para pag layout sa mga player padulong rank 1, 2, 3
 function renderResults(allPolls) {
-    if (!resultsContainer) return;
-    resultsContainer.innerHTML = "";
+    if (!officialResults || !communityResults) return;
+    
+    // Limpyohan usa ang screen
+    officialResults.innerHTML = "";
+    communityResults.innerHTML = "";
+    let hasCommunityBallots = false;
 
     for (let id in allPolls) {
         const poll = allPolls[id];
@@ -36,7 +49,7 @@ function renderResults(allPolls) {
             totalVotes += (opt.votes || 0);
         }
         
-        // Paghan-ay (sort) kung kinsa ang pinakadaghan og boto
+        // Sort from Rank 1 down to bottom
         optionsArray.sort((a, b) => (b.votes || 0) - (a.votes || 0));
 
         let optionsHtml = "";
@@ -61,6 +74,20 @@ function renderResults(allPolls) {
             <h3 style="margin-bottom: 15px; color: white; border-bottom: 1px solid #444; padding-bottom: 10px;">${poll.question}</h3>
             ${optionsHtml}
         `;
-        resultsContainer.appendChild(card);
+
+        // DIRI GI-BUWAG ANG OFFICIAL SA COMMUNITY
+        if (officialTitles.includes(poll.question)) {
+            officialResults.appendChild(card);
+        } else {
+            communityResults.appendChild(card);
+            hasCommunityBallots = true; // Markahan nga naay community ballot nga nahimo
+        }
+    }
+
+    // Kung walay custom ballot nga nahimo, tago-an ang "Community Ballots" nga title
+    if (!hasCommunityBallots) {
+        communitySection.style.display = 'none';
+    } else {
+        communitySection.style.display = 'block';
     }
 }
