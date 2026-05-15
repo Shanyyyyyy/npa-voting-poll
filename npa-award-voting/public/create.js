@@ -5,7 +5,7 @@ const createBtn = document.getElementById('createPollBtn');
 const injectBtn = document.getElementById('autoInjectBtn');
 const messageDiv = document.getElementById('message');
 
-// --- ANG MASTER LIST SA MGA VALID NGA NPA PLAYERS UG COACHES ---
+
 // Diri nimo idugang ang ubang pangalan kung gusto nimo padak-an ang listahan
 
     // --- ANG MASTER LIST SA MGA VALID NGA NPA PLAYERS UG COACHES ---
@@ -97,7 +97,7 @@ if (createBtn) {
             return;
         }
 
-        // Error trap #2: NPA Player Validation Check (KANI ANG IMONG GIPADUGANG BAY) meow
+        // Error trap #2: NPA Player Validation Check (KANI ANG IMONG GIPADUGANG BAY)
         let invalidCandidate = null;
         for (let i = 0; i < options.length; i++) {
             // Gi-check kung ang gi-type naa ba sa atong master list
