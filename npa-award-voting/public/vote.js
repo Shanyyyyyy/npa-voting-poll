@@ -1,28 +1,25 @@
-// Function ni para sa boto-boto bay. Giusab nako ang local storage memory variables padulong npaVotes.
-import { db, ref, onValue, update, push, set } from './firebase.js';
+import { db, ref, onValue, update } from './firebase.js';
 
 const pollContainer = document.getElementById('pollContainer');
 const searchInput = document.getElementById('searchInput');
 const categoryFilter = document.getElementById('categoryFilter');
 const statusFilter = document.getElementById('statusFilter');
+const submitBar = document.getElementById('submitBar');
+const submitAllBtn = document.getElementById('submitAllBtn');
+const pendingCountText = document.getElementById('pendingCount');
 
 let allPolls = {};
-// Giusab ang keyword to npaVotes para di mabungkag imong karaan nga storage logic
 let myVotes = JSON.parse(localStorage.getItem('npaVotes')) || {};
+let pendingVotes = {}; // Diri isave ang mga gi-click pero wala pa gi-submit
 
 const pollsRef = ref(db, 'votingPollSystem/polls');
 
-// Mu-listen sa database real-time
 onValue(pollsRef, (snapshot) => {
     if (snapshot.exists()) {
         allPolls = snapshot.val();
-        console.log("Firebase Data Loaded:", allPolls);
         renderPolls();
     } else {
-        console.log("Firebase is completely empty.");
-        if (pollContainer) {
-            pollContainer.innerHTML = "<p style='text-align:center; color: #888; font-size: 1.2rem; margin-top: 20px;'>No ballots found in database.</p>";
-        }
+        if (pollContainer) pollContainer.innerHTML = "<p style='text-align:center;'>No ballots found in database.</p>";
     }
 });
 
@@ -38,7 +35,6 @@ function renderPolls() {
 
     for (let id in allPolls) {
         const poll = allPolls[id];
-        
         if (!poll || !poll.question) continue;
 
         const matchesSearch = poll.question.toLowerCase().includes(searchTerm);
@@ -56,18 +52,27 @@ function renderPolls() {
             for (let optKey in poll.options) {
                 const isClosed = poll.status === "Closed";
                 const isMyPick = myVotes[id] === optKey; 
+                const isPendingPick = pendingVotes[id] === optKey; // Na-click pero wa pa na-save
                 
-                let btnStyle = isMyPick ? "background: var(--gold); color: black; border: 2px solid white;" : "";
-                let btnText = isMyPick ? "✓ YOUR PICK" : "Vote (10pt)";
+                let btnStyle = "";
+                let btnText = "Select";
+
+                if (isMyPick) {
+                    btnStyle = "background: var(--gold); color: black; border: 2px solid white;";
+                    btnText = "✓ SAVED";
+                } else if (isPendingPick) {
+                    btnStyle = "background: white; color: black; border: 2px solid var(--npa-blue); font-weight: bold;";
+                    btnText = "• SELECTED";
+                }
                 
                 optionsHtml += `
-                    <div style="margin: 10px 0; display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #222; border-radius: 6px; ${isMyPick ? 'border: 1px solid var(--gold);' : ''}">
-                        <span style="font-weight: 600; ${isMyPick ? 'color: var(--gold);' : ''}">${poll.options[optKey].text}</span>
+                    <div style="margin: 10px 0; display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #222; border-radius: 6px; ${isMyPick ? 'border: 1px solid var(--gold);' : ''} ${isPendingPick ? 'border: 1px solid white;' : ''}">
+                        <span style="font-weight: 600; ${isMyPick || isPendingPick ? 'color: var(--gold);' : ''}">${poll.options[optKey].text}</span>
                         <div class="btn-group">
                             <button 
                                 style="${btnStyle}"
                                 ${isClosed || hasVotedForThis ? 'disabled' : ''} 
-                                onclick="castVote('${id}', '${optKey}', 10)">
+                                onclick="selectVote('${id}', '${optKey}')">
                                 ${isClosed ? "CLOSED" : btnText}
                             </button>
                         </div>
@@ -77,7 +82,7 @@ function renderPolls() {
             card.innerHTML = `
                 <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
                     <span class="status-badge ${poll.status.toLowerCase()}">${poll.status}</span>
-                    <small style="color: var(--gold); font-weight: bold;">${hasVotedForThis ? "BALLOT CAST" : "PENDING"}</small>
+                    <small style="color: var(--gold); font-weight: bold;">${hasVotedForThis ? "LOCKED IN" : "PENDING"}</small>
                 </div>
                 <h3 style="margin-bottom: 15px;">${poll.question}</h3>
                 ${optionsHtml}
@@ -89,23 +94,55 @@ function renderPolls() {
     if (!found) pollContainer.innerHTML = "<p style='text-align:center;'>No matching ballots found for your search/filter.</p>";
 }
 
-// System para ma-save ang gi-click nga player
-window.castVote = (pollId, optKey, pts) => {
-    const currentVotes = allPolls[pollId].options[optKey].votes || 0;
-    update(ref(db, `votingPollSystem/polls/${pollId}/options/${optKey}`), { votes: currentVotes + pts });
+// Function para mu-pili ug player
+window.selectVote = (pollId, optKey) => {
+    if (myVotes[pollId]) return; // Dili na mapislit kung naka-vote na sa una
+    pendingVotes[pollId] = optKey; // I-save sa temporary memory
     
-    myVotes[pollId] = optKey;
-    // I-save nako diri sa storage gamit na ang npaVotes
-    localStorage.setItem('npaVotes', JSON.stringify(myVotes));
+    // I-update ang text sa Floating Bar
+    const pendingAmount = Object.keys(pendingVotes).length;
+    pendingCountText.innerText = `${pendingAmount} Pending Selection${pendingAmount > 1 ? 's' : ''}`;
+    submitBar.style.display = 'block'; // Ipakita ang submit bar
     
-    const toast = document.createElement('div');
-    toast.style.cssText = "position:fixed; bottom:20px; right:20px; background:var(--gold); color:#000; padding:15px; border-radius:8px; font-weight:bold; z-index:1000; box-shadow: 0 4px 15px rgba(0,0,0,0.5);";
-    toast.innerText = `Ballot Locked! +${pts} Points`;
-    document.body.appendChild(toast);
-    
-    setTimeout(() => toast.remove(), 2000);
     renderPolls(); 
 };
+
+// Function inig click sa SUBMIT button
+if (submitAllBtn) {
+    submitAllBtn.addEventListener('click', () => {
+        submitAllBtn.innerText = "SAVING...";
+        submitAllBtn.disabled = true;
+
+        for (let pollId in pendingVotes) {
+            const optKey = pendingVotes[pollId];
+            const currentVotes = allPolls[pollId].options[optKey].votes || 0;
+            // I-push sa database
+            update(ref(db, `votingPollSystem/polls/${pollId}/options/${optKey}`), { votes: currentVotes + 10 });
+            // I-save sa permanent memory
+            myVotes[pollId] = optKey;
+        }
+
+        // I-save sa device sa user
+        localStorage.setItem('npaVotes', JSON.stringify(myVotes));
+        
+        // Limpyohan ang temporary memory
+        pendingVotes = {};
+        
+        setTimeout(() => {
+            submitBar.style.display = 'none';
+            submitAllBtn.innerText = "🔒 SUBMIT BALLOT";
+            submitAllBtn.disabled = false;
+            
+            const toast = document.createElement('div');
+            toast.style.cssText = "position:fixed; top:20px; right:20px; background:var(--gold); color:#000; padding:15px; border-radius:8px; font-weight:bold; z-index:1000; box-shadow: 0 4px 15px rgba(0,0,0,0.5);";
+            toast.innerText = `✅ Official Ballot Saved Successfully!`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+            
+            renderPolls();
+        }, 800); // Gamayng delay para mutuo ang user nga nag-loading hehe
+    });
+}
 
 if(searchInput) searchInput.addEventListener('input', renderPolls);
 if(categoryFilter) categoryFilter.addEventListener('change', renderPolls);
