@@ -20,9 +20,21 @@
 
     <div class="container">
         <h1 style="color: var(--gold); font-family: 'Oswald', sans-serif; text-transform: uppercase;">Live Leaderboard</h1>
-        <p style="color: #ccc; margin-bottom: 20px;">Real-time voting results for the 2026 NPA Season Awards.</p>
+        <p style="color: #ccc; margin-bottom: 40px;">Real-time voting results for the 2026 NPA Season Awards.</p>
         
-        <div id="resultsContainer"></div>
+        <div id="officialSection" style="margin-bottom: 50px;">
+            <h2 style="color: var(--gold); font-family: 'Oswald', sans-serif; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px;">
+                🏆 OFFICIAL NPA AWARDS
+            </h2>
+            <div id="officialResults" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;"></div>
+        </div>
+
+        <div id="communitySection">
+            <h2 style="color: #ccc; font-family: 'Oswald', sans-serif; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px;">
+                🗣️ COMMUNITY CUSTOM BALLOTS
+            </h2>
+            <div id="communityResults" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;"></div>
+        </div>
     </div>
 
     <script type="module" src="results.js"></script>
