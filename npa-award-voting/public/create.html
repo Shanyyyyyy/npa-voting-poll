@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPA Awards | Create Ballot</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="logo-container">
+            <img src="NPA PIC.jpg" alt="NPA Logo" class="nav-logo">
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="vote.html">Vote</a>
+            <a href="results.html">Results</a>
+            <a href="create.html" class="active">Admin</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card" style="max-width: 600px; margin: 40px auto; background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid #333;">
+            <h1 style="color: var(--gold); font-family: 'Oswald', sans-serif; text-align: center; margin-bottom: 10px;">CREATE NEW BALLOT</h1>
+            <p style="text-align: center; color: var(--text-dim); margin-bottom: 30px;">Add a custom award or use the auto-generator below for the NPA.</p>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display:block; margin-bottom: 8px; color: var(--gold); font-weight: bold;">Award Name</label>
+                <input type="text" id="pollQuestion" placeholder="e.g., 2026 Scoring Champion" style="width:100%; padding: 12px; background: #222; border: 1px solid #444; color: white; border-radius: 6px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display:block; margin-bottom: 8px; color: var(--gold); font-weight: bold;">Category</label>
+                <select id="pollCategory" style="width:100%; padding: 12px; background: #222; border: 1px solid #444; color: white; border-radius: 6px;">
+                    <option value="Award">Official Award</option>
+                    <option value="All-Star">All-Star Selection</option>
+                    <option value="Special">Special Recognition</option>
+                </select>
+            </div>
+
+            <label style="display:block; margin-bottom: 8px; color: var(--gold); font-weight: bold;">Candidates (Min. 2)</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+                <input type="text" id="opt1" placeholder="Candidate 1" style="padding: 10px; background: #222; border: 1px solid #444; color: white; border-radius: 4px;">
+                <input type="text" id="opt2" placeholder="Candidate 2" style="padding: 10px; background: #222; border: 1px solid #444; color: white; border-radius: 4px;">
+                <input type="text" id="opt3" placeholder="Candidate 3" style="padding: 10px; background: #222; border: 1px solid #444; color: white; border-radius: 4px;">
+                <input type="text" id="opt4" placeholder="Candidate 4" style="padding: 10px; background: #222; border: 1px solid #444; color: white; border-radius: 4px;">
+            </div>
+
+            <button id="createPollBtn" style="width: 100%; padding: 15px; background: var(--npa-blue); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 15px; transition: 0.3s;">
+                DEPLOY INDIVIDUAL BALLOT
+            </button>
+
+            <div style="display: flex; align-items: center; margin: 20px 0; color: #444;">
+                <hr style="flex: 1; border: 0; border-top: 1px solid #333;">
+                <span style="padding: 0 10px; font-size: 0.8rem;">OR</span>
+                <hr style="flex: 1; border: 0; border-top: 1px solid #333;">
+            </div>
+            
+            <button id="autoInjectBtn" style="width: 100%; padding: 15px; background: var(--gold); color: black; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s;">
+                ⚡ AUTO-GENERATE ALL 2026 NPA FINALISTS ⚡
+            </button>
+
+            <div id="message" style="text-align: center; margin-top: 20px; font-weight: bold; min-height: 24px;"></div>
+        </div>
+    </div>
+
+    <script type="module" src="create.js"></script>
+</body>
+</html>

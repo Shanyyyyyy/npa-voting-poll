@@ -1,0 +1,150 @@
+/* Mga color ug design ni para sa atong NPA theme bay. Giilisdan nako ang variable names padulong npa. */
+:root {
+    --npa-blue: #1d428a; /* Gibuhat nakong npa-blue imbis nga nba-blue */
+    --npa-red: #c8102e;  /* Gibuhat nakong npa-red */
+    --gold: #fdb927;
+    --dark-bg: #0a0a0a;
+    --card-bg: #1a1a1a;
+    --text-main: #ffffff;
+    --text-dim: #b3b3b3;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background: rgba(0, 0, 0, 0.9);
+    border-bottom: 1px solid #333;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-logo {
+    height: 50px;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
+}
+
+.nav-links a {
+    color: var(--text-main);
+    text-decoration: none;
+    margin-left: 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--gold);
+}
+
+.hero {
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    padding: 0 10%;
+    background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.4)), 
+                url('https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&q=80&w=2069');
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-content h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 4rem;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+}
+
+.gold-text { color: var(--gold); }
+
+.season-tag {
+    color: var(--gold);
+    letter-spacing: 3px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.hero-content p {
+    max-width: 600px;
+    color: var(--text-dim);
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.hero-btns { display: flex; gap: 1rem; }
+
+.btn-primary, .btn-secondary {
+    padding: 1rem 2rem;
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 4px;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.btn-primary {
+    background: var(--gold);
+    color: black;
+}
+
+.btn-secondary {
+    border: 2px solid white;
+    color: white;
+}
+
+.btn-primary:hover { transform: translateY(-3px); background: #e6a820; }
+.btn-secondary:hover { background: white; color: black; }
+
+.container { padding: 4rem 10%; }
+
+.section-header h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.divider {
+    height: 4px;
+    width: 80px;
+    background: var(--npa-blue); /* Na-update padulong npa-blue */
+    margin-bottom: 30px;
+}
+
+.video-container {
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+video {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
+}
+
+footer {
+    text-align: center;
+    padding: 3rem;
+    color: #555;
+    font-size: 0.8rem;
+    border-top: 1px solid #222;
+}

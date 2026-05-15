@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vote - NPA Awards</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="logo-container">
+            <img src="NPA PIC.jpg" alt="NPA Logo" class="nav-logo" style="height: 50px;">
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="vote.html" class="active">Vote</a>
+            <a href="results.html">Results</a>
+            <a href="create.html">Admin</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 style="color: var(--gold); font-family: 'Oswald', sans-serif; text-transform: uppercase;">Official Ballots</h1>
+        <p style="color: #ccc; margin-bottom: 20px;">Cast your weighted votes for the 2026 NPA Season Awards.</p>
+
+        <div class="controls" style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <input type="text" id="searchInput" placeholder="Search awards (e.g. MVP)..." style="flex: 1; padding: 10px; border-radius: 4px; border: 1px solid #444; background: #222; color: white;">
+            <select id="categoryFilter" style="padding: 10px; border-radius: 4px; border: 1px solid #444; background: #222; color: white;">
+                <option value="All">All Categories</option>
+                <option value="Award">Awards</option>
+            </select>
+            <select id="statusFilter" style="padding: 10px; border-radius: 4px; border: 1px solid #444; background: #222; color: white;">
+                <option value="All">All Status</option>
+                <option value="Open">Open</option>
+                <option value="Closed">Closed</option>
+            </select>
+        </div>
+
+        <button id="autoInjectBtn" style="width: 100%; margin-bottom: 20px; font-size: 1.2rem; background: var(--gold); color: black; border: none; padding: 12px; cursor: pointer; font-weight: bold; border-radius: 6px; display:none;">
+            ⚡ FORCE GENERATE 2026 FINALISTS ⚡
+        </button>
+        <div id="message" style="text-align: center; margin-bottom: 15px; font-weight: bold;"></div>
+
+        <div id="pollContainer"></div>
+    </div>
+
+    <script type="module" src="vote.js"></script>
+</body>
+</html>
