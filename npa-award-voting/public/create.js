@@ -97,7 +97,7 @@ if (createBtn) {
             return;
         }
 
-        // Error trap #2: NPA Player Validation Check (KANI ANG IMONG GIPADUGANG BAY)
+        // Error trap #2: NPA Player Validation Check (KANI ANG IMONG GIPADUGANG BAY) meow
         let invalidCandidate = null;
         for (let i = 0; i < options.length; i++) {
             // Gi-check kung ang gi-type naa ba sa atong master list
